@@ -1,0 +1,63 @@
+_schema-version: '3.1'
+ID: cap-boilerplate
+version: 1.0.0
+description: "S4/HANA proxy."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+modules:
+  - name: cap-boilerplate-cap-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: cap-boilerplate-cap-destination
+      - name: cap-boilerplate-cap-connectivity
+      - name: cap-boilerplate-cap-auth
+
+resources: # Os recursos sobem como instâncias do Cloud Foundry
+  - name: cap-boilerplate-cap-connectivity # Conectar a aplicação ao Cloud Connector, além da destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
+
+  - name: cap-boilerplate-cap-destination #Destination é para se comunicar com a destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-plan: lite
+
+  - name: cap-boilerplate-cap-auth #Para subir a aplicação com autenticação xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: cap-boilerplate-${space}
+        tenant-mode: dedicated
