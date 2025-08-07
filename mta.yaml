@@ -1,5 +1,5 @@
 _schema-version: '3.1'
-ID: cap-boilerplate
+ID: cashback-proxy
 version: 1.0.0
 description: "S4/HANA proxy."
 parameters:
@@ -11,7 +11,7 @@ build-parameters:
         - npm ci
         - npx cds build --production
 modules:
-  - name: cap-boilerplate-cap-srv
+  - name: cashback-proxy-cap-srv
     type: nodejs
     path: gen/srv
     parameters:
@@ -23,18 +23,18 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: cap-boilerplate-cap-destination
-      - name: cap-boilerplate-cap-connectivity
-      - name: cap-boilerplate-cap-auth
+      - name: cashback-proxy-cap-destination
+      - name: cashback-proxy-cap-connectivity
+      - name: cashback-proxy-cap-auth
 
 resources: # Os recursos sobem como instâncias do Cloud Foundry
-  - name: cap-boilerplate-cap-connectivity # Conectar a aplicação ao Cloud Connector, além da destination
+  - name: cashback-proxy-cap-connectivity # Conectar a aplicação ao Cloud Connector, além da destination
     type: org.cloudfoundry.managed-service
     parameters:
       service: connectivity
       service-plan: lite
 
-  - name: cap-boilerplate-cap-destination #Destination é para se comunicar com a destination
+  - name: cashback-proxy-cap-destination #Destination é para se comunicar com a destination
     type: org.cloudfoundry.managed-service
     parameters:
       config:
@@ -52,12 +52,12 @@ resources: # Os recursos sobem como instâncias do Cloud Foundry
       service: destination
       service-plan: lite
 
-  - name: cap-boilerplate-cap-auth #Para subir a aplicação com autenticação xsuaa
+  - name: cashback-proxy-cap-auth #Para subir a aplicação com autenticação xsuaa
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
       path: ./xs-security.json
       config:
-        xsappname: cap-boilerplate-${space}
+        xsappname: cashback-proxy-${space}
         tenant-mode: dedicated
