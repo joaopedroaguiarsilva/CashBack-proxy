@@ -6,9 +6,12 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@sap-cloud-sdk/http-client": "^4.1.1",
+    "@sap-cloud-sdk/resilience": "^4.1.1",
     "@sap/cds": "^9",
+    "@sap/xssec": "^4",
     "express": "^4",
-    "@sap/xssec": "^4"
+    "sap-cloud-sdk-documentation": "github:SAP/cloud-sdk"
   },
   "engines": {
     "node": ">=20"
