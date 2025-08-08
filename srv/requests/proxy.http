@@ -1,0 +1,35 @@
+@server = http://localhost:4004
+@auth = Authorization: Basic alice:
+
+
+### ProxyService.A_BusinessPartner
+GET {{server}}/proxy/A_BusinessPartner?$top=1
+Content-Type: application/json
+
+### ProxyService.A_SalesOrder
+GET {{server}}/proxy/A_SalesOrder?$expand=to_Item&$top=1
+Content-Type: application/json
+
+### ProxyService.A_Product
+GET {{server}}/proxy/A_Product?$expand=to_Description&$top=1
+Content-Type: application/json
+
+### ProxyService.A_SalesOrder
+POST {{server}}/proxy/A_SalesOrder
+Content-Type: application/json
+
+{
+    "SalesOrderType": "OR",
+    "PurchaseOrderByCustomer": "1000010",
+    "SoldToParty": "USCU_S02",
+    "TotalNetAmount": "2000",
+    "to_Item": [
+        {
+            "SalesOrderItem": "1",
+            "Material": "EWMS7-01",
+            "RequestedQuantity": "100",
+            "RequestedQuantityUnit": "PC",
+            "NetAmount": "1000"
+        }
+    ]
+}
