@@ -24,6 +24,6 @@ module.exports = async (srv) => {
         };
     });
 
-    srv.on('READ', 'A_Product', (req) => prodt.get(req.http.req.url));
+    srv.on('READ', 'A_Product', (req) => prodt.get(req.http.req.url)); //Fazendo a requisição na mão (montando a URL)
 
 }
